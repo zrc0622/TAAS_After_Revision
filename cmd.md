@@ -30,3 +30,8 @@ python hirl/train_sac.py --type ESAC --port {your port} --model_name {your model
 ## 实例
 ```
 ```
+
+# SAC
+```
+python hirl/train_sac.py --type SAC --port {your port} --model_name {your model name} --env straight_line --random --plot
+```

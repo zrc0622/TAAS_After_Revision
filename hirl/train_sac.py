@@ -1,3 +1,6 @@
+import os
+os.environ['kmp_duplicate_lib_ok']='true'
+
 from agents.SAC.agent import SacAgent as SACAgent
 from utils.plot import plot_3d_trajectories, plot_distance
 from utils.data_processor import read_data
@@ -156,6 +159,7 @@ def main(config):
     model_name = config.model_name
     sac_type = config.type
     env_type = config.env
+    plot = config.plot
 
     if config.random:
         print("random")
@@ -325,7 +329,7 @@ def main(config):
             
             # VALIDATION
             if (((episode + 1) % checkpointRate) == 0):
-                highScore, successRate = validate(validationEpisodes, env, validationStep, agent, True, agent.plot_dir, arttir, agent.model_dir, episode, checkpointRate, writer, highScore, successRate, if_random)
+                highScore, successRate = validate(validationEpisodes, env, validationStep, agent, plot, agent.plot_dir, arttir, agent.model_dir, episode, checkpointRate, writer, highScore, successRate, if_random)
                 arttir += 1
     else:
         # 初始化专家缓冲区
@@ -455,7 +459,7 @@ def main(config):
             
             # VALIDATION
             if (((episode + 1) % checkpointRate) == 0):
-                highScore, successRate = validate(validationEpisodes, env, validationStep, agent, True, agent.plot_dir, arttir, agent.model_dir, episode, checkpointRate, writer, highScore, successRate, if_random)
+                highScore, successRate = validate(validationEpisodes, env, validationStep, agent, plot, agent.plot_dir, arttir, agent.model_dir, episode, checkpointRate, writer, highScore, successRate, if_random)
                 arttir += 1
 
 
@@ -467,5 +471,6 @@ if __name__ == '__main__':
     parser.add_argument('--type', type=str, default='ESAC')
     parser.add_argument('--env', type=str, default='straight_line') # serpentine
     parser.add_argument('--seed', type=int, default=None)
+    parser.add_argument('--plot', action='store_true')
     parser.add_argument('--random', action='store_true') # serpentine
     main(parser.parse_args())
