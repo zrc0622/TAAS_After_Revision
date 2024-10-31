@@ -42,7 +42,7 @@ def plot_3d_trajectories(self_pos, oppo_pos, fire, lock, dir, file_name):
                     color=self_colors[i], linestyle='--', linewidth=1, alpha=0.5, zorder=1)
 
     for i in lock:
-        ax.plot(self_pos[i:i+2,0], self_pos[i:i+2,2], self_pos[i:i+2,1], color='#FFDFBF', zorder=3, linewidth=2, alpha=0.1)
+        ax.plot(self_pos[i:i+2,0], self_pos[i:i+2,2], self_pos[i:i+2,1], color='#FFDFBF', zorder=3, linewidth=0.8, alpha=1)
 
     # 先创建一个Normalize对象，指定颜色映射的范围
     self_norm = Normalize(vmin=0, vmax=num_points)
@@ -68,11 +68,11 @@ def plot_3d_trajectories(self_pos, oppo_pos, fire, lock, dir, file_name):
     oppo_cbar.set_ticks(np.arange(0, num_points, 500))
 
     for i in fire:
-        ax.scatter(self_pos[i, 0], self_pos[i, 2], self_pos[i, 1], color='red', marker='^', s=6, zorder=5 if i == fire[0] else "")
+        ax.scatter(self_pos[i, 0], self_pos[i, 2], self_pos[i, 1], color='red', marker='^', s=8, zorder=5 if i == fire[0] else "")
         # ax.plot(self_pos[i:i+2,0], self_pos[i:i+2,2], self_pos[i:i+2,1], color='red', zorder=3, linewidth=3)
 
     for i in fire:
-        ax.scatter(self_pos[i, 0], self_pos[i, 2], self_pos[i, 1], color='red', marker='^', s=6, zorder=5 if i == fire[0] else "")
+        ax.scatter(self_pos[i, 0], self_pos[i, 2], self_pos[i, 1], color='red', marker='^', s=8, zorder=5 if i == fire[0] else "")
 
     dir = os.path.join(dir, file_name)
 

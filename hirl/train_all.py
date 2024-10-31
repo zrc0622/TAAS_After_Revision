@@ -192,7 +192,7 @@ def main(config):
     if env_type == "straight_line":
         print("env is harfang straight line")
         trainingEpisodes = 6000
-        validationEpisodes = 20 # 20
+        validationEpisodes = 50 # 20
         explorationEpisodes = 20 # 200
         maxStep = 1500 # 6000
         validationStep = 1500 # 6000
@@ -202,7 +202,7 @@ def main(config):
     elif env_type == "serpentine":
         print("env is harfang serpentine")
         trainingEpisodes = 6000
-        validationEpisodes = 20 # 20
+        validationEpisodes = 50 # 20
         explorationEpisodes = 20 # 200
         maxStep = 1500 # 6000
         validationStep = 1500 # 6000
