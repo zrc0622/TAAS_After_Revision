@@ -150,7 +150,6 @@ class Agent:
         self.expert_states = expert_states
         self.expert_actions = expert_actions
         self.target_indices = self.upsample_expert_data(self.expert_actions)
-        print(f"upsample num is {len(self.target_indices)}")
 
         self.expert_upsample = False
 
@@ -170,6 +169,7 @@ class Agent:
         BCbatchAction = BCActions[batch_indices]
 
         if self.expert_upsample:
+            print(f"upsample num is {len(self.target_indices)}")
             selected_target_indices = np.random.choice(self.target_indices)
             replace_index = np.random.randint(self.batchsize)
             BCbatchState[replace_index] = BCStates[selected_target_indices]

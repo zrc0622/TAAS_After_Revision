@@ -95,6 +95,7 @@ def validate(validationEpisodes, env:HarfangEnvBeta2New, validationStep, agent:S
 
     print('Validation Episode: ', (episode//checkpointRate)+1, ' Average Reward:', mean(valScores), ' Success Rate:', success / validationEpisodes, ' Fire Success Rate:', fire_success/validationEpisodes)
     tensor_writer.add_scalar('Validation/Avg Reward', mean(valScores), episode)
+    tensor_writer.add_scalar('Validation/Std Reward', pstdev(valScores), episode)
     tensor_writer.add_scalar('Validation/Success Rate', success/validationEpisodes, episode)
     tensor_writer.add_scalar('Validation/Fire Success Rate', fire_success/validationEpisodes, episode)
     
@@ -205,7 +206,7 @@ def main(config):
     df.set_renderless_mode(render)
     df.set_client_update_mode(True)
 
-    bufferSize = 3*(10**5)
+    bufferSize = 2*(10**5)
     gamma = 0.99
     criticLR = 1e-3
     actorLR = 1e-3
@@ -221,7 +222,7 @@ def main(config):
     state_space = gym.spaces.Box(low=np.array([-1.0] * stateDim), high=np.array([1.0] * stateDim), dtype=np.float64)
     action_space = gym.spaces.Box(low=np.array([-1.0] * actionDim), high=np.array([1.0] * actionDim), dtype=np.float64)
     useLayerNorm = True
-    warm_up_rate = 10
+    warm_up_rate = 20
 
     if if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'/{env_type}/expert_data_ai_random.csv'
     elif not if_random: data_dir = f'hirl/data/{env_type}/expert_data_ai_fixed_small_delta0.csv'

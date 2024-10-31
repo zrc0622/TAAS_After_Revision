@@ -95,6 +95,7 @@ def validate(validationEpisodes, env:HarfangEnvBeta2New, validationStep, agent:H
 
     print('Validation Episode: ', (episode//checkpointRate)+1, ' Average Reward:', mean(valScores), ' Success Rate:', success / validationEpisodes, ' Fire Success Rate:', fire_success/validationEpisodes)
     tensor_writer.add_scalar('Validation/Avg Reward', mean(valScores), episode)
+    tensor_writer.add_scalar('Validation/Std Reward', pstdev(valScores), episode)
     tensor_writer.add_scalar('Validation/Success Rate', success/validationEpisodes, episode)
     tensor_writer.add_scalar('Validation/Fire Success Rate', fire_success/validationEpisodes, episode)
     
@@ -195,15 +196,7 @@ def main(config):
         explorationEpisodes = 20 # 200
         maxStep = 1500 # 6000
         validationStep = 1500 # 6000
-
-        if if_random:
-            bc_actor_dir = local_config['experiment']['bc_actor_dir'] + '/straight_line'
-            bc_actor_name = local_config['experiment']['bc_actor_name']['straight_line'][:-len(name)]
-        else:
-            bc_actor_dir = 'logs2/straight_line/BC/bc_fixed_small_delta0_nus/2024_10_23_0_49/model'
-            bc_actor_name = 'Agent26_100_-245_'
         
-
         env = HarfangEnvBeta2New()
 
     elif env_type == "serpentine":
@@ -213,14 +206,7 @@ def main(config):
         explorationEpisodes = 20 # 200
         maxStep = 1500 # 6000
         validationStep = 1500 # 6000
-        
-        if if_random:
-            bc_actor_dir = local_config['experiment']['bc_actor_dir'] + '/serpentine'
-            bc_actor_name = local_config['experiment']['bc_actor_name']['serpentine'][:-len(name)]
-        else:
-            bc_actor_dir = 'E:/HIRL4UCAV/logs2/serpentine/BC/bc_fixed_neu/2024_10_24_10_26/model'
-            bc_actor_name = 'Agent81_100_5_'
-
+            
         env = HarfangSerpentineEnvNew()
 
     df.set_renderless_mode(render)
@@ -258,6 +244,8 @@ def main(config):
 
     if agent_name == 'HIRL':
         expert_states, expert_actions = read_data(data_dir)
+        bc_actor_dir = local_config['experiment']['bc_actor_dir'] + f'/{env_type}'
+        bc_actor_name = local_config['experiment']['bc_actor_name'][f'{env_type}'][:-len(name)]
         agent = HIRLAgent(actorLR, criticLR, stateDim, actionDim, hiddenLayer1, hiddenLayer2, tau, gamma, bufferSize, batchSize, useLayerNorm, name, expert_states, expert_actions, bc_weight, expert_warm_up)
     elif agent_name == 'BC':
         expert_states, expert_actions = read_data(data_dir)
@@ -289,7 +277,7 @@ def main(config):
             print('Episode: ', episode+1, 'RunTime: ', hours, ':',minutes,':', seconds)
 
             # validation
-            if (((episode + 1) % checkpointRate) == 0):
+            if (((episode + 1) % (checkpointRate*4)) == 0):
                 highScore, successRate = validate(validationEpisodes, env, validationStep, agent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, writer, highScore, successRate, if_random)
                 arttir += 1
     
