@@ -178,7 +178,7 @@ class Agent(nn.Module):
         self.bc_actor = Actor(actorLR,stateDim,actionDim, full1Dim, full2Dim, layerNorm, name)
         
         self.loss_lambda = 10000
-        self.target_update_freq = 4
+        self.target_update_freq = 3
         self.buffer_upsample = False # train buffer stepsuccess upsample
         self.expert_upsample = False # bc fire upsample
 

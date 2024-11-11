@@ -168,6 +168,9 @@ class Agent(nn.Module):
         self.targetCritic = Critic(criticLR, stateDim, actionDim, full1Dim, full2Dim, layerNorm, 'TargetCritic_'+name)
         hard_update(self.targetCritic, self.critic)
         
+        self.update_count = 0
+        self.target_update_freq = 3
+
         self.buffer = UniformMemory(bufferSize, False)
     
     def chooseAction(self, state):
@@ -247,8 +250,10 @@ class Agent(nn.Module):
             self.actor_loss.backward()
             self.actor.optimizer.step()
         
-            soft_update(self.targetCritic, self.critic, self.tau)
-            soft_update(self.targetActor, self.actor, self.tau)
+            self.update_count += 1
+            if self.update_count % self.target_update_freq == 0:
+                soft_update(self.targetCritic, self.critic, self.tau)
+                soft_update(self.targetActor, self.actor, self.tau)
         
         self.actorTrainable = not self.actorTrainable
         

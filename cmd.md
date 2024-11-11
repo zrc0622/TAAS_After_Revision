@@ -14,10 +14,18 @@ python hirl/train_all.py --agent BC --port 11111 --model_name bc_random_1 --env 
 ```
 python hirl/train_all.py --agent HIRL --port {your port} --type soft --model_name {your model name} --env straight_line --random --plot
 ```
+```
+python hirl/train_all.py --agent HIRL --port {your port} --type linear --bc_weight 1 --model_name {your model name} --env straight_line --random --plot
+```
 
 ## 实例
 ```
 python hirl/train_all.py --agent HIRL --port 11111 --type soft --model_name hirl_random_1 --env serpentine --random --plot
+```
+
+# TD3
+```
+python hirl/train_all.py --agent TD3 --port 11111 --model_name td3_random_1 --env straight_line --random --plot
 ```
 
 ---

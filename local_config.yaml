@@ -1,11 +1,12 @@
 experiment:
-  result_dir: B:/code/HIRL4UCAV/TAAS_After_Revision/result
-  bc_actor_dir: B:/code/HIRL4UCAV/TAAS_After_Revision/bc_actor
+  result_dir: D:/project/TAAS_After_Revision/result2
+  bc_actor_dir: D:/project/TAAS_After_Revision/bc_actor
   bc_actor_name:
-    straight_line:
-    serpentine: Agent136_90_-753_Harfang_GYM
-  expert_data_dir: B:/code/HIRL4UCAV/TAAS_After_Revision/expert_data
+    straight_line: Agent181_100_-4_Harfang_GYM
+    serpentine: Agent77_86_-600_Harfang_GYM
+    circular: 
+  expert_data_dir: D:/project/TAAS_After_Revision/expert_data
 
 network:
-  ip: 192.168.193.226
+  ip: 172.27.58.131
 

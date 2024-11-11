@@ -277,7 +277,7 @@ def main(config):
             print('Episode: ', episode+1, 'RunTime: ', hours, ':',minutes,':', seconds)
 
             # validation
-            if (((episode + 1) % (checkpointRate*4)) == 0):
+            if ((episode + 1) % checkpointRate == 0 and (episode + 1) >= 1000):
                 highScore, successRate = validate(validationEpisodes, env, validationStep, agent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, writer, highScore, successRate, if_random)
                 arttir += 1
     
@@ -349,7 +349,7 @@ def main(config):
             fire = False
 
             if hirl_type == 'linear':
-                bc_weight_now = bc_weight - episode/1000
+                bc_weight_now = bc_weight - episode/5000
                 if bc_weight_now <= 0:
                     bc_weight_now = 0
             elif hirl_type == 'fixed':
@@ -426,32 +426,32 @@ def main(config):
     
     elif agent_name == 'TD3':
         print('agent is TD3')
+
         # RANDOM EXPLORATION
         print("Exploration Started")
         for episode in range(explorationEpisodes):
-            state = env.reset()
+            if if_random: state = env.random_reset()
+            else: state = env.reset()
             done = False
             for step in range(maxStep):
                 if not done:
                     action = env.action_space.sample()                
-
-                    n_state,reward,done, info, step_success = env.step(action)
-                    # print(n_state)
+                    n_state, reward, done, info, step_success = env.step(action)
+                    
                     if step == maxStep-1:
                         break
 
                     agent.store(state,action,n_state,reward,done,step_success)
+                    
                     state=n_state
-
-                    if done:
-                        break
 
         print("Training Started")
         scores = []
         trainsuccess = []
         firesuccess = []
         for episode in range(trainingEpisodes):
-            state = env.reset()
+            if if_random: state = env.random_reset()
+            else: state = env.reset()
             totalReward = 0
             done = False
             shut_down = False # 表示是否成功
@@ -459,19 +459,21 @@ def main(config):
             for step in range(maxStep):
                 if not done:
                     action = agent.chooseAction(state)
-                    n_state,reward,done, info , step_success= env.step(action)
+                    n_state, reward, done, info , step_success= env.step(action)
 
                     if step == maxStep - 1:
                         break
 
                     agent.store(state, action, n_state, reward, done, step_success) # n_state 为下一个状态
+                    
                     state = n_state
                     totalReward += reward
 
                     if agent.buffer.fullEnough(agent.batchSize):
                         critic_loss, actor_loss = agent.learn()
-                        writer.add_scalar('Loss/Critic_Loss', critic_loss, step + episode * maxStep)
-                        writer.add_scalar('Loss/Actor_Loss', actor_loss, step + episode * maxStep)
+                        if step % logRate == 0:
+                            writer.add_scalar('Loss/Critic_Loss', critic_loss, step + episode * maxStep)
+                            writer.add_scalar('Loss/Actor_Loss', actor_loss, step + episode * maxStep)
                         
                 elif done:
                     if env.episode_success: shut_down = True
@@ -504,7 +506,7 @@ def main(config):
                 
             #VALIDATION
             if (((episode + 1) % checkpointRate) == 0):
-                highScore, successRate = validate(validationEpisodes, env, validationStep, agent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, writer, highScore, successRate)
+                highScore, successRate = validate(validationEpisodes, env, validationStep, agent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, writer, highScore, successRate, if_random)
                 arttir += 1       
     
 if __name__=='__main__':
