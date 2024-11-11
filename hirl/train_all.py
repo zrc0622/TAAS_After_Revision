@@ -209,6 +209,16 @@ def main(config):
             
         env = HarfangSerpentineEnvNew()
 
+    elif env_type == "circular":
+        print("env is harfang circular")
+        trainingEpisodes = 6000
+        validationEpisodes = 50 # 20
+        explorationEpisodes = 20 # 200
+        maxStep = 1900 # 6000
+        validationStep = 1900 # 6000
+            
+        env = HarfangCircularEnvNew()
+
     df.set_renderless_mode(render)
     df.set_client_update_mode(True)
 
@@ -349,7 +359,7 @@ def main(config):
             fire = False
 
             if hirl_type == 'linear':
-                bc_weight_now = bc_weight - episode/1000
+                bc_weight_now = bc_weight - episode/5000
                 if bc_weight_now <= 0:
                     bc_weight_now = 0
             elif hirl_type == 'fixed':

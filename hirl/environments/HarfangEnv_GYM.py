@@ -1361,3 +1361,72 @@ class HarfangSerpentineEnvNew(HarfangEnvBeta2New):
         df.set_plane_thrust(self.Plane_ID_oppo, 0.6)
         df.set_plane_linear_speed(self.Plane_ID_oppo, 200)
         df.retract_gear(self.Plane_ID_oppo)
+
+class HarfangCircularEnvNew(HarfangEnvBeta2New):
+    def __init__(self):
+        super(HarfangCircularEnvNew, self).__init__()
+
+    def set_ennemy_yaw(self):
+        self.circular_step += 1
+
+        if self.circular_step < 100:
+            df.set_plane_pitch(self.Plane_ID_oppo, float(-0.02))
+            df.set_plane_roll(self.Plane_ID_oppo, float(0.84))
+        else:
+            df.set_plane_pitch(self.Plane_ID_oppo, float(-0.01))
+        df.set_plane_roll(self.Plane_ID_oppo, float(0.28))
+        df.set_plane_yaw(self.Plane_ID_oppo, float(0))
+
+        # if self.circular_step < 1000:
+        #     df.set_plane_pitch(self.Plane_ID_ally, float(-0.02))
+        #     df.set_plane_roll(self.Plane_ID_ally, float(0.81))
+        # else:
+        #     df.set_plane_pitch(self.Plane_ID_ally, float(-0.01))
+        # df.set_plane_roll(self.Plane_ID_ally, float(0.27))
+        # df.set_plane_yaw(self.Plane_ID_ally, float(0))
+
+
+    def _apply_action(self, action_ally):
+        df.set_plane_pitch(self.Plane_ID_ally, float(action_ally[0]))
+        df.set_plane_roll(self.Plane_ID_ally, float(action_ally[1]))
+        df.set_plane_yaw(self.Plane_ID_ally, float(action_ally[2]))
+
+        self.set_ennemy_yaw()
+
+        if float(action_ally[3] > 0): # 大于0发射导弹
+            df.fire_missile(self.Plane_ID_ally, 0)
+            self.now_missile_state = True # 此时导弹发射
+        else:
+            self.now_missile_state = False
+        
+        df.update_scene()
+
+    def _reset_machine(self):
+        self.reset_ennemy()
+        self.oppo_health = 0.2
+
+        df.reset_machine(self.Plane_ID_ally)
+        df.reset_machine_matrix(self.Plane_ID_ally, 0, 3500, -4000, 0, 0, 0)
+        df.set_plane_thrust(self.Plane_ID_ally, 1)
+        df.set_plane_linear_speed(self.Plane_ID_ally, 300)
+        df.retract_gear(self.Plane_ID_ally)
+
+    def _random_reset_machine(self):
+        self.reset_ennemy()
+        self.oppo_health = 0.2
+
+        df.reset_machine(self.Plane_ID_ally)
+        df.reset_machine_matrix(self.Plane_ID_ally, 0+random.randint(-100, 100), 3500+random.randint(-100, 100), -4000+random.randint(-100, 100), 0, 0, 0)
+        df.set_plane_thrust(self.Plane_ID_ally, 1)
+        df.set_plane_linear_speed(self.Plane_ID_ally, 300)
+        df.retract_gear(self.Plane_ID_ally)
+
+    def reset_ennemy(self):
+        self.circular_step = 0
+
+        df.reset_machine(self.Plane_ID_oppo)
+        df.set_health(self.Plane_ID_oppo, 0.2) # 设置的为健康水平，即血量/100
+        df.reset_machine_matrix(self.Plane_ID_oppo, 0, 4200, 0, 0, 0, 0)
+        df.set_plane_thrust(self.Plane_ID_oppo, 0.8)
+        df.set_plane_linear_speed(self.Plane_ID_oppo, 290)
+        df.retract_gear(self.Plane_ID_oppo)
