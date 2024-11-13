@@ -207,6 +207,16 @@ def main(config):
 
         env = HarfangSerpentineEnvNew()
 
+    elif env_type == "circular":
+        print("env is harfang circular")
+        trainingEpisodes = 6000
+        validationEpisodes = 50 # 20
+        explorationEpisodes = 20 # 200
+        maxStep = 1900 # 6000
+        validationStep = 1900 # 6000
+            
+        env = HarfangCircularEnvNew()
+
     df.set_renderless_mode(render)
     df.set_client_update_mode(True)
 

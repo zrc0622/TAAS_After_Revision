@@ -4,7 +4,7 @@ experiment:
   bc_actor_name:
     straight_line: Agent181_100_-4_Harfang_GYM
     serpentine: Agent77_86_-600_Harfang_GYM
-    circular: 
+    circular: None
   expert_data_dir: D:/project/TAAS_After_Revision/expert_data
 
 network:

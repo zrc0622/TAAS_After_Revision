@@ -524,7 +524,7 @@ if __name__=='__main__':
     parser.add_argument('--agent', type=str, default='HIRL') # 代理：HIRL、TD3
     parser.add_argument('--port', type=int, default=None)
     parser.add_argument('--type', type=str, default='linear') # HIRL type：linear、fixed、soft
-    parser.add_argument('--bc_weight', type=float, default=1)
+    parser.add_argument('--bc_weight', type=float, default=0.5)
     parser.add_argument('--model_name', type=str, default=None)
     parser.add_argument('--load_model', action='store_true')
     parser.add_argument('--render', action='store_true')
